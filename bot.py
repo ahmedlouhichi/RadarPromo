@@ -1,4 +1,5 @@
 import os
+import asyncio
 import logging
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -134,7 +135,7 @@ def main() -> None:
         raise RuntimeError("La variable TELEGRAM_TOKEN est manquante. Ajoute-la dans les parametres de Render.")
 
     threading.Thread(target=lancer_ping, daemon=True).start()
-
+    asyncio.set_event_loop(asyncio.new_event_loop())
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("prix", prix))
