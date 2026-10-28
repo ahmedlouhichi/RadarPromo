@@ -94,17 +94,27 @@ def lancer_ping():
     port = int(os.environ.get("PORT", 10000))
     HTTPServer(("0.0.0.0", port), Ping).serve_forever()
 
-
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info("COMMANDE START RECUE")
+
+    if update.message is None:
+        logger.warning("Aucun message reçu pour /start")
+        return
+
     texte = (
         "Bienvenue sur Radar Promo !\n\n"
-        "Je cherche pour toi les meilleurs prix et les bons plans.\n"
+        "Je cherche pour toi les meilleurs prix et les bons plans.\n\n"
         "Exemple :\n"
         "/prix chaussures nike taille 42\n\n"
-        "Je te donne les liens tries par prix sur plus de 40 sites, "
-        "les groupes de bons plans et les codes promo."
+        "Je te donne les liens vers plus de 40 sites."
     )
-    await update.message.reply_text(texte)
+
+    try:
+        await update.message.reply_text(texte)
+        logger.info("REPONSE START ENVOYEE")
+    except Exception:
+        logger.exception("ECHEC DE LA REPONSE START")
+        raise
 
 
 async def prix(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
